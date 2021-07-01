@@ -45,9 +45,11 @@ request for HTML validation, the PHP libraries **cURL** and **OpenSSL** are requ
 You can integrate the source file **`HtmlTestCase.php`** into your own PHPUnit 
 Test-infrastructure (you may have to rename or change the namespace) or use it as it is.
 
-Main goal is to use the `HtmlTestCase` class as Baseclass for your own Testcases.
-The **`phpunit.xml`** is a example config that calls the tests from the **`ExampleTest`**
-directory.
+The only change to your own test code is to use the `HtmlTestCase` class instead of 
+`TestCase` as the base class for your test cases. The **`phpunit.xml`** is an example 
+configuration that calls the tests from the **`ExampleTest`** directory. 
 
 This testcase contains two tests for each assertion-method of the package. The first of each
 is passed successful, the second one fails so you can see the generated error messages.
+
+![HtmlTestCaseFailures](./ExampleTest/HtmlTestCaseFailures.png)
