@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    verbose="true"
+    colors="true"
+    bootstrap ="autoloader.php">
+    <testsuites>
+        <testsuite name="HtmlTestCase">
+            <directory>ExampleTest</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">SKien/Test</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" showOnlySummary="true"/>
+        <log type="coverage-html" target="ExampleTest/coverage"/>
+    </logging>
+</phpunit>
