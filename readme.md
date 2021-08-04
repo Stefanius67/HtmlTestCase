@@ -35,7 +35,7 @@ It supports several methods to test/assert for
  - HTML tag/element has requested style set to expected value
  - given text is plain text (means, text doesn't contain any HTML tags)
 
-A full class reference can be found on [HtmlTestCase.md](./HtmlTestCase.md).
+[A full class reference can be found here](https://www.phpclasses.org/package/12137-PHP-Extends-PHPUnit-to-test-HTML-output.html#usage).
 
 ## Requirements
 The class is designed for use with the **Version 9** of **PHPUnit** and to do the cURL
