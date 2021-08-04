@@ -1,6 +1,6 @@
+<a name="htmltestcase"></a>
 # Class HtmlTestCase
 
-<a name="htmltestcase"></a>
 Full name:    **\SKien\Test\HtmlTestCase**    
 Base class:    **\PHPUnit\Framework\TestCase**
 ---

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<style>
+body
+{
+	width: 60em; 
+	font-size: 14px; 
+	font-family: helvetica, sans-serif, arial, helvetica;
+}
+a, a:visited
+{
+	color: darkblue;
+	text-decoration: none;
+	border-bottom: 1px dotted darkblue;
+}
+a:hover
+{
+	color: darkblue;
+	border-bottom: none;
+}
+
+h1, h2, h3
+{
+	color: #19597c;
+}
+hr
+{
+	color: #eee;
+}
+ul
+{
+	line-height: 150%;
+}
+td, th
+{
+	padding: 3px 7px;
+}
+th
+{
+	background: #bbb;
+	border: 1px solid black;
+}
+tr:nth-child(even)
+{
+	background: white;
+}
+tr:nth-child(odd)
+{
+	background: #eee;
+}
+</style>
+<body>
+
+<a name="htmltestcase"></a>
+<h1>Class HtmlTestCase</h1>
+
+<p><strong>Extension of PHPUnit Testcase for HTML testing.</strong></p>
+
+<p>This class supports several methods to test/assert for</p>
+
+<ul>
+	<li>valid HTML5 document/block</li>
+	<li>existing HTML tag/element/attribute</li>
+	<li>HTML tag/element/attribute value equals expected</li>
+	<li>HTML tag/element/attribute contains expected part</li>
+	<li>given text is plain text (means, text doesn&#39;t contain any HTML tags)</li>
+</ul>
+
+<p><strong>To test for valid HTML5 doc/block the PHP libraries cURL and OpenSSL required.</strong></p>
+
+<h2>Overview</h2>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Method</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#assertcontainsnohtmltag" >assertContainsNoHtmlTag</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given text don&#39;t contain any HTML tags (-&gt; contains plain text).</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementattribcontains" >assertHtmlElementAttribContains</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID and specified attrib containing expected part.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementattribequals" >assertHtmlElementAttribEquals</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID and specified attrib having expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementcontains" >assertHtmlElementContains</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID containing expected part.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementequals" >assertHtmlElementEquals</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID and expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementhasattrib" >assertHtmlElementHasAttrib</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID and specified attrib.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlelementhasstyle" >assertHtmlElementHasStyle</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID and specified style having expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlhaselement" >assertHtmlHasElement</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains element with requested ID.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmlhastag" >assertHtmlHasTag</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltagattribcontains" >assertHtmlTagAttribContains</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag with specified attrib containing expected part.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltagattribequals" >assertHtmlTagAttribEquals</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag with specified attrib having expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltagcontains" >assertHtmlTagContains</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag containing expected part.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltagequals" >assertHtmlTagEquals</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag with expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltaghasattrib" >assertHtmlTagHasAttrib</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag with specified attrib.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#asserthtmltaghasstyle" >assertHtmlTagHasStyle</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given HTML string contains the requested tag with specified style having expected value.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#assertvalidhtml" >assertValidHtml</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given string is a valid HTML5 document.</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><a href="#assertvalidhtmlblock" >assertValidHtmlBlock</a></td>
+			<td style="border-style:solid; border-width:1px">Assert that the given string is a valid HTML5 block.</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Methods</h2>
+
+<a name="assertcontainsnohtmltag"></a>
+<h3>assertContainsNoHtmlTag</h3>
+
+<p>Assert that the given text don&#39;t contain any HTML tags (-&gt; contains plain text).</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertContainsNoHtmlTag</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$text</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">text</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The text to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementattribcontains"></a>
+<h3>assertHtmlElementAttribContains</h3>
+
+<p>Assert that the given HTML string contains element with requested ID and specified attrib containing expected part.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementAttribContains</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strContains</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML string</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strContains</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Part the attrib value must contain</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementattribequals"></a>
+<h3>assertHtmlElementAttribEquals</h3>
+
+<p>Assert that the given HTML string contains element with requested ID and specified attrib having expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementAttribEquals</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Expected attribute value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementcontains"></a>
+<h3>assertHtmlElementContains</h3>
+
+<p>Assert that the given HTML string contains element with requested ID containing expected part.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementContains</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strContains</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strContains</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Part the node value must contain</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementequals"></a>
+<h3>assertHtmlElementEquals</h3>
+
+<p>Assert that the given HTML string contains element with requested ID and expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementEquals</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Expected node value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementhasattrib"></a>
+<h3>assertHtmlElementHasAttrib</h3>
+
+<p>Assert that the given HTML string contains element with requested ID and specified attrib.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementHasAttrib</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlelementhasstyle"></a>
+<h3>assertHtmlElementHasStyle</h3>
+
+<p>Assert that the given HTML string contains element with requested ID and specified style having expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlElementHasStyle</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strStyle</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML string</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strStyle</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The style to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The expected value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlhaselement"></a>
+<h3>assertHtmlHasElement</h3>
+
+<p>Assert that the given HTML string contains element with requested ID.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlHasElement</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strID</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strID</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">ID of the element we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmlhastag"></a>
+<h3>assertHtmlHasTag</h3>
+
+<p>Assert that the given HTML string contains the requested tag.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlHasTag</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltagattribcontains"></a>
+<h3>assertHtmlTagAttribContains</h3>
+
+<p>Assert that the given HTML string contains the requested tag with specified attrib containing expected part.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagAttribContains</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strContains</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML string</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strContains</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Part the attrib value must contain</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltagattribequals"></a>
+<h3>assertHtmlTagAttribEquals</h3>
+
+<p>Assert that the given HTML string contains the requested tag with specified attrib having expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagAttribEquals</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Expected attribute value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltagcontains"></a>
+<h3>assertHtmlTagContains</h3>
+
+<p>Assert that the given HTML string contains the requested tag containing expected part.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagContains</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strContains</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strContains</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Part the node value must contain</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltagequals"></a>
+<h3>assertHtmlTagEquals</h3>
+
+<p>Assert that the given HTML string contains the requested tag with expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagEquals</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Expected node value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltaghasattrib"></a>
+<h3>assertHtmlTagHasAttrib</h3>
+
+<p>Assert that the given HTML string contains the requested tag with specified attrib.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagHasAttrib</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strAttrib</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strAttrib</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Attrib to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="asserthtmltaghasstyle"></a>
+<h3>assertHtmlTagHasStyle</h3>
+
+<p>Assert that the given HTML string contains the requested tag with specified style having expected value.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertHtmlTagHasStyle</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strTag</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strStyle</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strExpect</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML string</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strTag</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The Tag we are locking for</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strStyle</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The style to test</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strExpect</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The expected value</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="assertvalidhtml"></a>
+<h3>assertValidHtml</h3>
+
+<p>Assert that the given string is a valid HTML5 document.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertValidHtml</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p>Calls&nbsp;<a href="https://html5.validator.nu" >https://html5.validator.nu</a>&nbsp;through cURL request. More info can be found on&nbsp;<a href="https://github.com/validator/validator/wiki/Service-%C2%BB-HTTP-interface" >https://github.com/validator/validator/wiki/Service-%C2%BB-HTTP-interface</a></p>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+<a name="assertvalidhtmlblock"></a>
+<h3>assertValidHtmlBlock</h3>
+
+<p>Assert that the given string is a valid HTML5 block.</p>
+
+<pre style="background-color: #f6f8fa; padding: 12px; overflow-x: auto; margin-left:0; margin-right:0; text-align:left">
+<code style="background-color: #f6f8fa;"><span style="color:#0077aa">public</span> HtmlTestCase<span style="color:#999999">:</span><span style="color:#999999">:</span><span style="color:#dd4a68">assertValidHtmlBlock</span><span style="color:#999999">(</span>string <span style="color:#ee9900">$strHTML</span><span style="color:#999999">,</span> string <span style="color:#ee9900">$strMessage</span> <span style="background-color:rgba(255, 255, 255, 0.5)">=</span> <span style="color:#990055">null</span><span style="color:#999999">)</span> <span style="color:#999999">:</span> void
+</code></pre>
+
+<p>The HTML block is enclosed in a valid HTML5 Document definition before validation.</p>
+
+<p><strong>Parameters:</strong></p>
+
+<table cellspacing="0" style="-webkit-text-stroke-width:0px; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#24292e; display:block; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;; font-size:16px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; margin-bottom:16px; margin-top:0px; max-width:100%; orphans:2; overflow:auto; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; white-space:normal; widows:2; width:max-content; word-spacing:0px">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strHTML</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">The HTML to validate</td>
+		</tr>
+		<tr>
+			<td style="border-style:solid; border-width:1px"><code style="background-color: #f6f8fa;">strMessage</code></td>
+			<td style="border-style:solid; border-width:1px"><strong>string</strong></td>
+			<td style="border-style:solid; border-width:1px">Optional Message</td>
+		</tr>
+	</tbody>
+</table>
+
+<p><a href="#htmltestcase" >[go to top]</a></p>
+
+<hr />
+
+</body>
+</html>
